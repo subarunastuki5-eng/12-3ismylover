@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gửi Nàng Thơ Của Anh</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Mono&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        :root {
+            /* Tone màu cơ bản cho nền ngoài */
+            --bg-light: #fff0f3;
+            --bg-dark: #ffd1da;
+            --pink-dark: #c9184a;
+            
+            /* Tone màu Vintage cho chứng nhận */
+            --vintage-paper: #fdf5e6; /* Sáng và sang hơn */
+            --vintage-border: #8b5a2b;
+            --vintage-text: #3e2723;
+            --vintage-red: #8a1c1c;
+        }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            overflow: hidden;
+            background: radial-gradient(circle at center, var(--bg-light) 0%, var(--bg-dark) 100%);
+            font-family: 'Quicksand', sans-serif;
+            color: var(--vintage-text);
+            touch-action: none;
+        }
+
+        /* MÀN HÌNH CHỚP FLASH KHI LƯU ẢNH */
+        #flash-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: white; z-index: 99999; opacity: 0; pointer-events: none;
+        }
+
+        /* NÚT BẬT/TẮT NHẠC */
+        #music-toggle {
+            position: fixed; top: 20px; right: 20px;
+            width: 40px; height: 40px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%; display: flex;
+            justify-content: center; align-items: center;
+            cursor: pointer; z-index: 100;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            font-size: 1.2rem; display: none;
+            transition: all 0.3s;
+        }
+        #music-toggle:hover { transform: scale(1.1); background: white; }
+        .playing { animation: spin 4s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        .page {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden; transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 10;
+        }
+        .page.active { opacity: 1; visibility: visible; z-index: 20; }
+
+        /* TRANG 1 */
+        .big-heart {
+            width: 90px; height: 90px; background: var(--pink-dark); position: relative;
+            transform: rotate(-45deg); animation: heartbeat 1.5s infinite ease-in-out;
+            cursor: pointer; box-shadow: 0 0 60px rgba(201, 24, 74, 0.5);
+            transition: transform 0.3s;
+        }
+        .big-heart::before, .big-heart::after {
+            content: ''; position: absolute; width: 90px; height: 90px;
+            background: var(--pink-dark); border-radius: 50%;
+        }
+        .big-heart::before { top: -45px; left: 0; }
+        .big-heart::after { top: 0; left: 45px; }
+        .instruction {
+            margin-top: 120px; font-family: 'Playfair Display', serif; font-style: italic;
+            color: var(--pink-dark); letter-spacing: 2px; font-size: 1.1rem;
+            animation: fadeInOut 3s infinite;
+        }
+        @keyframes heartbeat {
+            0%, 100% { transform: rotate(-45deg) scale(1); }
+            30% { transform: rotate(-45deg) scale(1.15); }
+            45% { transform: rotate(-45deg) scale(1.05); }
+            60% { transform: rotate(-45deg) scale(1.25); }
+        }
+        @keyframes fadeInOut { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+        /* TRANG 2: BẤT NGỜ & LỜI CHÚC */
+        #page2 { cursor: default; }
+        
+        /* Hộp thư bất ngờ */
+        .surprise-box {
+            background: #fffdf9; border: 2px dashed var(--vintage-border);
+            padding: 40px 30px; border-radius: 12px; text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1); z-index: 30;
+            transition: all 0.8s ease; max-width: 80%;
+        }
+        .surprise-box h3 {
+            font-family: 'Playfair Display', serif; color: var(--vintage-red);
+            margin-top: 0; letter-spacing: 2px;
+        }
+        .surprise-box p { font-style: italic; color: var(--vintage-text); margin-bottom: 25px; }
+        .btn-open {
+            background: var(--vintage-border); color: white; border: none; padding: 12px 30px;
+            font-family: 'Quicksand', sans-serif; font-weight: bold; border-radius: 25px;
+            cursor: pointer; letter-spacing: 1px; transition: background 0.3s;
+        }
+        .btn-open:hover { background: var(--vintage-red); }
+
+        .digital-wish {
+            position: absolute; font-family: 'Playfair Display', serif; font-size: 1.2rem;
+            color: #5c1a24; text-align: center; font-style: italic; white-space: pre-wrap;
+            border-left: 3px solid var(--vintage-red); padding: 15px 25px;
+            transition: opacity 1s, transform 3s ease-out; z-index: 25; max-width: 85%;
+            line-height: 1.8; background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(8px);
+            border-radius: 0 20px 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.05); pointer-events: none;
+        }
+        .click-to-continue {
+            position: absolute; bottom: 60px; font-size: 0.85rem; text-transform: uppercase;
+            letter-spacing: 4px; color: var(--pink-dark); opacity: 0; pointer-events: none;
+            transition: opacity 1s; cursor: pointer;
+        }
+        .click-to-continue.show { opacity: 0.8; animation: fadeInOut 2s infinite; }
+
+        /* TRANG 3: CHỨNG NHẬN VINTAGE CAO CẤP */
+        #page3 { perspective: 1000px; }
+        .certificate-wrapper {
+            background-color: var(--vintage-paper);
+            padding: 50px 40px; border-radius: 2px;
+            box-shadow: 5px 5px 25px rgba(0,0,0,0.2), inset 0 0 60px rgba(139, 90, 43, 0.08);
+            width: 85%; max-width: 450px;
+            text-align: center; position: relative;
+            background-image: url('https://www.transparenttextures.com/patterns/old-wall.png');
+            border: 8px solid var(--vintage-border);
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+        }
+        /* Viền trong cổ điển */
+        .certificate-wrapper::before {
+            content: ''; position: absolute;
+            top: 6px; left: 6px; right: 6px; bottom: 6px;
+            border: 1px solid var(--vintage-border);
+            pointer-events: none;
+        }
+        
+        .cert-title {
+            font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700;
+            color: var(--vintage-red); margin: 0 0 8px 0; letter-spacing: 2px;
+            text-transform: uppercase; transform: translateZ(30px);
+        }
+        .cert-subtitle {
+            font-family: 'Quicksand', sans-serif; font-size: 0.85rem; font-weight: 700;
+            text-transform: uppercase; color: #6d4c41; margin-bottom: 25px; letter-spacing: 4px;
+            transform: translateZ(25px);
+            border-bottom: 1px solid rgba(139, 90, 43, 0.3);
+            padding-bottom: 10px; display: inline-block;
+        }
+        
+        .image-upload-container {
+            width: 190px; height: 230px; margin: 0 auto 25px auto; 
+            border: 2px dashed rgba(139, 90, 43, 0.6);
+            border-radius: 4px; display: flex; justify-content: center; align-items: center;
+            overflow: hidden; cursor: pointer; position: relative;
+            transition: all 0.3s ease; z-index: 2;
+            transform: translateZ(40px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            padding: 8px; background-color: #fff;
+            background-repeat: no-repeat;
+        }
+        .image-upload-container:hover { border-style: solid; transform: translateZ(45px) scale(1.02); }
+        
+        .quote-footer {
+            font-family: 'Playfair Display', serif; font-size: 1.05rem; font-style: italic; color: var(--vintage-text);
+            margin: 20px 0; line-height: 1.6; transform: translateZ(20px); padding: 0 10px;
+        }
+        
+        /* Con dấu Vintage Sáp Đỏ (Nâng cấp) */
+        .vintage-stamp {
+            position: absolute; bottom: 25px; left: 25px;
+            width: 90px; height: 90px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #d82b2b, #8a1c1c);
+            border: 2px solid #5c1a1a;
+            color: #ffdddd;
+            display: flex; justify-content: center; align-items: center; text-align: center;
+            font-family: 'Playfair Display', serif; font-weight: 900; font-size: 0.7rem;
+            text-transform: uppercase;
+            transform: rotate(-15deg) translateZ(45px);
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.6), 0 5px 10px rgba(0,0,0,0.4);
+            line-height: 1.3; z-index: 5;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.4);
+        }
+        /* Tạo riềm cho sáp đỏ */
+        .vintage-stamp::after {
+            content: ''; position: absolute;
+            top: 3px; left: 3px; right: 3px; bottom: 3px;
+            border: 1px dashed rgba(255,255,255,0.4);
+            border-radius: 50%;
+        }
+
+        .btn-save {
+            margin-top: 35px; padding: 15px 45px; font-size: 0.95rem; font-family: 'Playfair Display', serif;
+            font-weight: bold; color: white; background: var(--vintage-border); border: none;
+            border-radius: 30px; cursor: pointer; letter-spacing: 2px; transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(139, 90, 43, 0.3); transform: translateZ(50px);
+        }
+        .btn-save:hover { background: var(--vintage-red); transform: translateZ(55px) translateY(-2px); }
+
+        .signature { font-family: 'Dancing Script', cursive; font-size: 2.2rem; color: #3e2723; margin-top: 5px; transform: translateZ(25px); }
+
+        /* HIỆU ỨNG TRÁI TIM CHẠM */
+        .trail-heart {
+            position: absolute; width: 14px; height: 14px; background: #ff4d6d;
+            transform: rotate(-45deg); pointer-events: none; animation: meltUp 1.2s ease-out forwards; z-index: 9999;
+        }
+        .trail-heart::before, .trail-heart::after {
+            content: ''; position: absolute; width: 14px; height: 14px; background: #ff4d6d; border-radius: 50%;
+        }
+        .trail-heart::before { top: -7px; left: 0; }
+        .trail-heart::after { top: 0; left: 7px; }
+        @keyframes meltUp {
+            0% { opacity: 0.8; transform: rotate(-45deg) scale(1) translateY(0); }
+            100% { opacity: 0; transform: rotate(-45deg) scale(0.3) translateY(-80px); }
+        }
+
+        /* HOA RƠI VÀ CONFETTI BẤT NGỜ */
+        .petal, .confetti {
+            position: absolute; pointer-events: none; z-index: 15;
+            animation: fall linear infinite; opacity: 0.8;
+        }
+        .petal {
+            background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+            border-radius: 15px 0 15px 0;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg) scale(1); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(360deg) scale(0.8); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bgm" loop>
+        <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="music-toggle" onclick="toggleMusic()">🎵</div>
+    <div id="flash-overlay"></div> <div id="page1" class="page active">
+        <div class="big-heart" onclick="goToPage(2)"></div>
+        <div class="instruction">Chạm vào trái tim để bắt đầu...</div>
+    </div>
+
+    <div id="page2" class="page">
+        <div id="surprise-box" class="surprise-box">
+            <h3>✉️ MỘT BỨC THƯ LẠ ✉️</h3>
+            <p>Có người đã gửi riêng cho bạn một điều bí mật...</p>
+            <button class="btn-open" onclick="openSurprise(event)">Mở Thư Ngay</button>
+        </div>
+
+        <div class="click-to-continue" id="p2-continue">Chạm màn hình để tiếp tục...</div>
+    </div>
+
+    <div id="page3" class="page">
+        <div id="certificate" class="certificate-wrapper">
+            <h1 class="cert-title">GIẤY CHỨNG NHẬN</h1>
+            <div class="cert-subtitle">Kỷ niệm 12/3 • Di sản nhan sắc</div>
+            
+            <label for="file-upload" class="image-upload-container" id="img-container">
+                <span id="upload-text" style="font-size: 0.8rem; color: var(--vintage-border); z-index: 1; text-align: center; line-height: 1.5; font-family: 'Playfair Display', serif;">
+                    ĐÍNH KÈM<br>ẢNH CỦA NÀNG
+                </span>
+                </label>
+            <input id="file-upload" type="file" accept="image/*" style="display: none;" onchange="previewImage(event)">
+            
+            <div class="quote-footer">
+                "Nàng không chỉ là một đóa hoa rực rỡ,<br>Nàng là cả một vầng trăng treo giữa trời thi ca."
+            </div>
+
+            <div style="font-size: 0.65rem; color: #6d4c41; text-transform: uppercase; letter-spacing: 2px; margin-top: 15px; transform: translateZ(20px);">Gửi đến Người Phụ Nữ Tuyệt Vời Nhất</div>
+            <div class="signature">Tâm hồn kẻ si tình</div>
+
+            <div class="vintage-stamp">
+                Chứng nhận<br>bởi Nam<br>12/3
+            </div>
+        </div>
+        <button class="btn-save" id="btn-save" onclick="saveCertificate()">📸 LƯU LẠI KỶ NIỆM NÀY</button>
+    </div>
+
+    <script>
+        // HỆ THỐNG ÂM NHẠC
+        let isPlaying = false;
+        const bgm = document.getElementById('bgm');
+        const musicBtn = document.getElementById('music-toggle');
+
+        function toggleMusic() {
+            if (isPlaying) {
+                bgm.pause();
+                musicBtn.classList.remove('playing');
+                musicBtn.style.opacity = '0.5';
+            } else {
+                bgm.play().catch(e => console.log("Cần tương tác để phát nhạc"));
+                musicBtn.classList.add('playing');
+                musicBtn.style.opacity = '1';
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // ĐIỀU HƯỚNG TRANG
+        function goToPage(pageNum) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById('page' + pageNum).classList.add('active');
+            
+            if (pageNum === 3) {
+                clearInterval(wishInterval);
+                initTiltEffect();
+            }
+        }
+
+        // MỞ HỘP BẤT NGỜ TRANG 2
+        let wishInterval;
+        function openSurprise(e) {
+            e.stopPropagation();
+            const box = document.getElementById('surprise-box');
+            
+            box.style.transform = 'scale(0.8)';
+            box.style.opacity = '0';
+            
+            setTimeout(() => {
+                box.style.display = 'none';
+                
+                if (!isPlaying) toggleMusic();
+                musicBtn.style.display = 'flex';
+                createPetals();
+                startLiteraryWishes();
+
+                setTimeout(() => {
+                    const continueText = document.getElementById('p2-continue');
+                    continueText.classList.add('show');
+                    document.getElementById('page2').onclick = () => goToPage(3);
+                    document.getElementById('page2').style.cursor = 'pointer';
+                }, 8000);
+            }, 800);
+        }
+
+        const literaryWishes = [
+            "Em là chương đẹp nhất trong cuốn tiểu thuyết đời anh.",
+            "Linh hồn em là cánh đồng hoa nở rộ giữa nhân gian.",
+            "Nhan sắc nàng là bản giao hưởng không lời, ngân vang giữa thinh lặng.",
+            "Có những vẻ đẹp không cần ngôn từ, chỉ cần một ánh mắt để lưu danh.",
+            "Nếu cuộc đời là một bức họa, em chính là nét vẽ tài hoa nhất.",
+            "Trong điển tích tình yêu, tên em chính là chương rực rỡ nhất."
+        ];
+
+        function startLiteraryWishes() {
+            const page2 = document.getElementById('page2');
+            wishInterval = setInterval(() => {
+                const wishEl = document.createElement('div');
+                wishEl.className = 'digital-wish';
+                const text = literaryWishes[Math.floor(Math.random() * literaryWishes.length)];
+                
+                wishEl.style.left = Math.random() * 40 + 5 + '%';
+                wishEl.style.top = Math.random() * 60 + 15 + '%';
+                page2.appendChild(wishEl);
+
+                let charIndex = 0;
+                const typeEffect = setInterval(() => {
+                    if (charIndex < text.length) {
+                        wishEl.innerText += text.charAt(charIndex);
+                        charIndex++;
+                    } else {
+                        clearInterval(typeEffect);
+                        wishEl.style.transform = 'translateY(-30px)';
+                        setTimeout(() => {
+                            wishEl.style.opacity = '0';
+                            setTimeout(() => wishEl.remove(), 1000);
+                        }, 3500);
+                    }
+                }, 50);
+            }, 2200);
+        }
+
+        function createPetals() {
+            setInterval(() => {
+                const petal = document.createElement('div');
+                petal.classList.add('petal');
+                const size = Math.random() * 15 + 10;
+                petal.style.width = size + 'px';
+                petal.style.height = size + 'px';
+                petal.style.left = Math.random() * 100 + 'vw';
+                petal.style.animationDuration = Math.random() * 3 + 4 + 's';
+                document.body.appendChild(petal);
+                setTimeout(() => petal.remove(), 7000);
+            }, 300);
+        }
+
+        // HIỆU ỨNG TILT 3D CHO THIỆP
+        function initTiltEffect() {
+            const card = document.getElementById('certificate');
+            const page3 = document.getElementById('page3');
+
+            const handleMove = (x, y) => {
+                const xAxis = (window.innerWidth / 2 - x) / 25;
+                const yAxis = (window.innerHeight / 2 - y) / 25;
+                card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+            };
+
+            page3.addEventListener('mousemove', (e) => handleMove(e.pageX, e.pageY));
+            page3.addEventListener('touchmove', (e) => handleMove(e.touches[0].clientX, e.touches[0].clientY));
+            page3.addEventListener('mouseleave', () => card.style.transform = `rotateY(0deg) rotateX(0deg)`);
+        }
+
+        // UPLOAD ẢNH (DÙNG BACKGROUND-IMAGE ĐỂ KHÔNG BỊ BÓP)
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = () => {
+                const container = document.getElementById('img-container');
+                container.style.backgroundImage = `url(${reader.result})`;
+                container.style.backgroundSize = 'cover';
+                container.style.backgroundPosition = 'center';
+                
+                document.getElementById('upload-text').style.display = 'none';
+                
+                // Bắn Confetti bất ngờ khi vừa tải ảnh lên
+                fireConfetti();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // HIỆU ỨNG BẮN PHÁO GIẤY BẤT NGỜ
+        function fireConfetti() {
+            const colors = ['#ff4d6d', '#ffd1da', '#ffb3c6', '#ff8fab', '#fb6f92'];
+            for(let i = 0; i < 40; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.classList.add('confetti');
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.width = (Math.random() * 8 + 5) + 'px';
+                    confetti.style.height = (Math.random() * 8 + 5) + 'px';
+                    confetti.style.left = '50%';
+                    confetti.style.top = '50%';
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                    
+                    // Toán học để bung tỏa ra xung quanh
+                    const angle = Math.random() * Math.PI * 2;
+                    const velocity = 50 + Math.random() * 100;
+                    const tx = Math.cos(angle) * velocity;
+                    const ty = Math.sin(angle) * velocity - 50; // Hướng lên một chút
+                    
+                    confetti.animate([
+                        { transform: 'translate(0,0) scale(1)', opacity: 1 },
+                        { transform: `translate(${tx}px, ${ty}px) scale(0)`, opacity: 0 }
+                    ], {
+                        duration: 1000 + Math.random() * 1000,
+                        easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                        fill: 'forwards'
+                    });
+                    
+                    document.getElementById('page3').appendChild(confetti);
+                    setTimeout(() => confetti.remove(), 2000);
+                }, i * 20);
+            }
+        }
+
+        // LƯU ẢNH + HIỆU ỨNG FLASH MÁY ẢNH
+        function saveCertificate() {
+            const cert = document.getElementById('certificate');
+            const btn = document.getElementById('btn-save');
+            const flash = document.getElementById('flash-overlay');
+            
+            // Cuộn lên đầu để html2canvas không bị lệch tọa độ
+            window.scrollTo(0, 0);
+
+            // Chớp flash
+            flash.style.transition = 'none';
+            flash.style.opacity = '0.8';
+            setTimeout(() => {
+                flash.style.transition = 'opacity 0.8s ease-out';
+                flash.style.opacity = '0';
+            }, 50);
+
+            btn.innerText = "ĐANG TẠO DI SẢN...";
+            btn.style.opacity = '0.7';
+
+            // Reset transform để chụp ảnh phẳng đẹp
+            cert.style.transform = `rotateY(0deg) rotateX(0deg)`;
+            cert.style.transition = 'none';
+
+            setTimeout(() => {
+                html2canvas(cert, { 
+                    scale: 3, 
+                    backgroundColor: '#fdf5e6', 
+                    useCORS: true,
+                    allowTaint: true
+                }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = 'Dieu-Tuyet-Voi-Nhat.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+
+                    btn.innerText = "📸 LƯU LẠI KỶ NIỆM NÀY";
+                    btn.style.opacity = '1';
+                    cert.style.transition = 'transform 0.1s ease-out';
+                });
+            }, 300); // Đợi 1 chút để reset CSS hoàn tất
+        }
+
+        // TRÁI TIM THEO CHUỘT
+        let lastHeartTime = 0;
+        function drawHeart(e) {
+            const now = Date.now();
+            if (now - lastHeartTime < 60) return;
+            lastHeartTime = now;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            const h = document.createElement('div');
+            h.className = 'trail-heart';
+            h.style.left = (clientX - 7) + 'px';
+            h.style.top = (clientY - 7) + 'px';
+            document.body.appendChild(h);
+            setTimeout(() => h.remove(), 1200);
+        }
+        document.addEventListener('mousemove', drawHeart);
+        document.addEventListener('touchmove', drawHeart, {passive: true});
+    </script>
+</body>
+</html>
