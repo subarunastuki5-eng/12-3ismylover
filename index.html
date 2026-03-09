@@ -6,7 +6,6 @@
     <title>Gửi Nàng Thơ Của Anh</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
     <style>
         :root {
             --bg-light: #fff0f3;
@@ -17,7 +16,6 @@
             --vintage-text: #3e2723;
             --vintage-red: #8a1c1c;
         }
-
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
             background: radial-gradient(circle at center, var(--bg-light) 0%, var(--bg-dark) 100%);
@@ -27,12 +25,10 @@
             -webkit-overflow-scrolling: touch;
             touch-action: manipulation;
         }
-
         #flash-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: white; z-index: 99999; opacity: 0; pointer-events: none;
         }
-
         #music-toggle {
             position: fixed; top: 20px; right: 20px;
             width: 40px; height: 40px;
@@ -47,28 +43,26 @@
         #music-toggle:hover { transform: scale(1.1); background: white; }
         .playing { animation: spin 4s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
-
         .page {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; flex-direction: column; align-items: center;
             opacity: 0; visibility: hidden; transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 10;
-            overflow-y: auto; 
+            overflow-y: auto;
             overflow-x: hidden;
             -webkit-overflow-scrolling: touch;
         }
         .page.active { opacity: 1; visibility: visible; z-index: 20; }
-        
+       
         #page1, #page2 { justify-content: center; overflow: hidden; }
         #page3 { justify-content: flex-start; padding: 40px 0 100px 0; perspective: 1000px; }
-
         /* TRANG 1 */
         .big-heart {
             width: 90px; height: 90px; background: var(--pink-dark); position: relative;
             transform: rotate(-45deg); animation: heartbeat 1.5s infinite ease-in-out;
             cursor: pointer; box-shadow: 0 0 60px rgba(201, 24, 74, 0.5);
             transition: transform 0.3s;
-            -webkit-tap-highlight-color: transparent; 
+            -webkit-tap-highlight-color: transparent;
         }
         .big-heart::before, .big-heart::after {
             content: ''; position: absolute; width: 90px; height: 90px;
@@ -88,7 +82,6 @@
             60% { transform: rotate(-45deg) scale(1.25); }
         }
         @keyframes fadeInOut { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
-
         /* TRANG 2 */
         #page2 { cursor: default; }
         .surprise-box {
@@ -110,7 +103,6 @@
             -webkit-tap-highlight-color: transparent;
         }
         .btn-open:hover { background: var(--vintage-red); }
-
         .digital-wish {
             position: absolute; font-family: 'Playfair Display', serif; font-size: 1.2rem;
             color: #5c1a24; text-align: center; font-style: italic; white-space: pre-wrap;
@@ -125,7 +117,6 @@
             transition: opacity 1s; cursor: pointer; text-align: center; width: 100%;
         }
         .click-to-continue.show { opacity: 0.8; animation: fadeInOut 2s infinite; pointer-events: auto; }
-
         /* TRANG 3: CHỨNG NHẬN */
         .certificate-wrapper {
             background-color: var(--vintage-paper);
@@ -144,7 +135,7 @@
             top: 6px; left: 6px; right: 6px; bottom: 6px;
             border: 1px solid var(--vintage-border); pointer-events: none;
         }
-        
+       
         .cert-title {
             font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700;
             color: var(--vintage-red); margin: 0 0 8px 0; letter-spacing: 2px;
@@ -156,9 +147,9 @@
             transform: translateZ(25px); border-bottom: 1px solid rgba(139, 90, 43, 0.3);
             padding-bottom: 10px; display: inline-block;
         }
-        
+       
         .image-upload-container {
-            width: 190px; height: 230px; margin: 0 auto 25px auto; 
+            width: 190px; height: 230px; margin: 0 auto 25px auto;
             border: 2px dashed rgba(139, 90, 43, 0.6);
             border-radius: 4px; display: flex; justify-content: center; align-items: center;
             overflow: hidden; cursor: pointer; position: relative;
@@ -170,12 +161,12 @@
             -webkit-tap-highlight-color: transparent;
         }
         .image-upload-container:hover { border-style: solid; transform: translateZ(45px) scale(1.02); }
-        
+       
         .quote-footer {
             font-family: 'Playfair Display', serif; font-size: 1.05rem; font-style: italic; color: var(--vintage-text);
             margin: 20px 0; line-height: 1.6; transform: translateZ(20px); padding: 0 10px;
         }
-        
+       
         .vintage-stamp {
             position: absolute; bottom: 25px; left: 25px;
             width: 90px; height: 90px; border-radius: 50%;
@@ -192,7 +183,6 @@
             top: 3px; left: 3px; right: 3px; bottom: 3px;
             border: 1px dashed rgba(255,255,255,0.4); border-radius: 50%;
         }
-
         .btn-save {
             margin-top: 35px; margin-bottom: 20px; padding: 15px 45px; font-size: 0.95rem; font-family: 'Playfair Display', serif;
             font-weight: bold; color: white; background: var(--vintage-border); border: none;
@@ -201,9 +191,7 @@
             -webkit-tap-highlight-color: transparent; display: block;
         }
         .btn-save:hover { background: var(--vintage-red); transform: translateZ(55px) translateY(-2px); }
-
         .signature { font-family: 'Dancing Script', cursive; font-size: 2.2rem; color: #3e2723; margin-top: 5px; transform: translateZ(25px); }
-
         /* HIỆU ỨNG */
         .trail-heart {
             position: absolute; width: 14px; height: 14px; background: #ff4d6d;
@@ -218,7 +206,6 @@
             0% { opacity: 0.8; transform: rotate(-45deg) scale(1) translateY(0); }
             100% { opacity: 0; transform: rotate(-45deg) scale(0.3) translateY(-80px); }
         }
-
         .petal, .confetti {
             position: absolute; pointer-events: none; z-index: 15;
             animation: fall linear infinite; opacity: 0.8;
@@ -231,7 +218,6 @@
             0% { transform: translateY(-10vh) rotate(0deg) scale(1); opacity: 1; }
             100% { transform: translateY(110vh) rotate(360deg) scale(0.8); opacity: 0; }
         }
-
         /* -------------------------------------------
            TỐI ƯU GIAO DIỆN MOBILE CHUYÊN SÂU
         ------------------------------------------- */
@@ -241,37 +227,34 @@
             .big-heart::before { top: -35px; }
             .big-heart::after { left: 35px; }
             .instruction { font-size: 0.95rem; margin-top: 100px; }
-            
+           
             .surprise-box { padding: 30px 20px; width: 90%; }
             .surprise-box h3 { font-size: 1.2rem; }
             .digital-wish { font-size: 1rem; padding: 12px 15px; width: 85%; }
-
-            .certificate-wrapper { 
-                padding: 30px 20px; 
-                width: 92%; 
-                border-width: 5px; 
+            .certificate-wrapper {
+                padding: 30px 20px;
+                width: 92%;
+                border-width: 5px;
             }
             .certificate-wrapper::before { top: 4px; left: 4px; right: 4px; bottom: 4px; }
-            
+           
             .cert-title { font-size: 1.6rem; letter-spacing: 1px; }
             .cert-subtitle { font-size: 0.7rem; margin-bottom: 15px; letter-spacing: 2px; }
-            
+           
             .image-upload-container { width: 140px; height: 180px; margin-bottom: 15px; }
             #upload-text { font-size: 0.7rem !important; }
-
             .quote-footer { font-size: 0.95rem; margin: 15px 0; }
-            
+           
             .vintage-stamp { width: 65px; height: 65px; font-size: 0.55rem; bottom: 15px; left: 15px; }
-            
+           
             .signature { font-size: 1.8rem; }
-            
+           
             .btn-save { padding: 12px 25px; font-size: 0.85rem; margin-top: 20px; width: 90%; text-align: center; }
-            
+           
             @keyframes fall {
                 animation-duration: 6s;
             }
         }
-
         @media (orientation: landscape) and (max-height: 480px) {
             .page { height: auto; min-height: 100vh; }
             #page3 { padding: 20px 0 60px 0; }
@@ -281,19 +264,16 @@
     </style>
 </head>
 <body>
-
     <audio id="bgm" loop preload="auto">
         <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3" type="audio/mpeg">
     </audio>
-
     <div id="music-toggle" onclick="toggleMusic()">🎵</div>
-    <div id="flash-overlay"></div> 
-    
+    <div id="flash-overlay"></div>
+   
     <div id="page1" class="page active">
         <div class="big-heart" onclick="goToPage(2)"></div>
         <div class="instruction">Chạm vào trái tim để bắt đầu...</div>
     </div>
-
     <div id="page2" class="page">
         <div id="surprise-box" class="surprise-box">
             <h3>✉️ MỘT BỨC THƯ LẠ ✉️</h3>
@@ -302,38 +282,33 @@
         </div>
         <div class="click-to-continue" id="p2-continue" onclick="goToPage(3)">Chạm màn hình để tiếp tục...</div>
     </div>
-
     <div id="page3" class="page">
         <div id="certificate" class="certificate-wrapper">
             <h1 class="cert-title">GIẤY CHỨNG NHẬN</h1>
             <div class="cert-subtitle">Kỷ niệm 12/3 • Di sản nhan sắc</div>
-            
+           
             <label for="file-upload" class="image-upload-container" id="img-container">
                 <span id="upload-text" style="font-size: 0.8rem; color: var(--vintage-border); z-index: 1; text-align: center; line-height: 1.5; font-family: 'Playfair Display', serif;">
                     ĐÍNH KÈM<br>ẢNH CỦA NÀNG
                 </span>
             </label>
             <input id="file-upload" type="file" accept="image/*" style="display: none;" onchange="previewImage(event)">
-            
+           
             <div class="quote-footer">
                 "Nàng không chỉ là một đóa hoa rực rỡ,<br>Nàng là cả một vầng trăng treo giữa trời thi ca."
             </div>
-
             <div style="font-size: 0.65rem; color: #6d4c41; text-transform: uppercase; letter-spacing: 2px; margin-top: 15px; transform: translateZ(20px);">Gửi đến Người Phụ Nữ Tuyệt Vời Nhất</div>
             <div class="signature">Tâm hồn kẻ si tình</div>
-
             <div class="vintage-stamp">
                 Chứng nhận<br>bởi Nam<br>12/3
             </div>
         </div>
         <button class="btn-save" id="btn-save" onclick="saveCertificate()">📸 LƯU LẠI KỶ NIỆM NÀY</button>
     </div>
-
     <script>
         let isPlaying = false;
         const bgm = document.getElementById('bgm');
         const musicBtn = document.getElementById('music-toggle');
-
         function toggleMusic() {
             if (isPlaying) {
                 bgm.pause();
@@ -346,35 +321,32 @@
             }
             isPlaying = !isPlaying;
         }
-
         function goToPage(pageNum) {
             document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
             const targetPage = document.getElementById('page' + pageNum);
             targetPage.classList.add('active');
-            targetPage.scrollTop = 0; 
-            
+            targetPage.scrollTop = 0;
+           
             if (pageNum === 3) {
                 clearInterval(wishInterval);
                 initTiltEffect();
             }
         }
-
         let wishInterval;
         function openSurprise(e) {
             e.stopPropagation();
             const box = document.getElementById('surprise-box');
-            
+           
             box.style.transform = 'scale(0.8)';
             box.style.opacity = '0';
-            
+           
             setTimeout(() => {
                 box.style.display = 'none';
-                
+               
                 if (!isPlaying) toggleMusic();
                 musicBtn.style.display = 'flex';
                 createPetals();
                 startLiteraryWishes();
-
                 setTimeout(() => {
                     const continueText = document.getElementById('p2-continue');
                     continueText.classList.add('show');
@@ -382,7 +354,6 @@
                 }, 8000);
             }, 800);
         }
-
         const literaryWishes = [
             "Em là chương đẹp nhất đời anh.",
             "Linh hồn em như cánh đồng hoa rực rỡ.",
@@ -401,19 +372,17 @@
             "Em là nét vẽ tài hoa nhất cuộc đời.",
             "Tên em sáng ngời trong chuyện tình yêu."
         ];
-
         function startLiteraryWishes() {
             const page2 = document.getElementById('page2');
             wishInterval = setInterval(() => {
                 const wishEl = document.createElement('div');
                 wishEl.className = 'digital-wish';
                 const text = literaryWishes[Math.floor(Math.random() * literaryWishes.length)];
-                
+               
                 const isMobile = window.innerWidth <= 480;
                 wishEl.style.left = isMobile ? '5%' : (Math.random() * 40 + 5 + '%');
                 wishEl.style.top = Math.random() * 60 + 15 + '%';
                 page2.appendChild(wishEl);
-
                 let charIndex = 0;
                 const typeEffect = setInterval(() => {
                     if (charIndex < text.length) {
@@ -430,7 +399,6 @@
                 }, 50);
             }, 2200);
         }
-
         function createPetals() {
             const isMobile = window.innerWidth <= 480;
             const intervalTime = isMobile ? 500 : 300;
@@ -446,18 +414,15 @@
                 setTimeout(() => petal.remove(), 7000);
             }, intervalTime);
         }
-
         function initTiltEffect() {
             const card = document.getElementById('certificate');
             const page3 = document.getElementById('page3');
-
             const handleMove = (x, y, isTouch = false) => {
-                const divider = isTouch ? 60 : 25; 
+                const divider = isTouch ? 60 : 25;
                 const xAxis = (window.innerWidth / 2 - x) / divider;
                 const yAxis = (window.innerHeight / 2 - y) / divider;
                 card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
             };
-
             page3.addEventListener('mousemove', (e) => handleMove(e.pageX, e.pageY));
             page3.addEventListener('touchmove', (e) => {
                 e.preventDefault();
@@ -466,7 +431,6 @@
             page3.addEventListener('mouseleave', () => card.style.transform = `rotateY(0deg) rotateX(0deg)`);
             page3.addEventListener('touchend', () => card.style.transform = `rotateY(0deg) rotateX(0deg)`);
         }
-
         function previewImage(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -476,13 +440,12 @@
                 container.style.backgroundImage = `url(${reader.result})`;
                 container.style.backgroundSize = 'cover';
                 container.style.backgroundPosition = 'center';
-                
+               
                 document.getElementById('upload-text').style.display = 'none';
                 fireConfetti();
             };
             reader.readAsDataURL(file);
         }
-
         function fireConfetti() {
             const isMobile = window.innerWidth <= 480;
             const confettiCount = isMobile ? 20 : 40;
@@ -497,12 +460,12 @@
                     confetti.style.left = '50%';
                     confetti.style.top = '50%';
                     confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-                    
+                   
                     const angle = Math.random() * Math.PI * 2;
                     const velocity = 50 + Math.random() * 100;
                     const tx = Math.cos(angle) * velocity;
-                    const ty = Math.sin(angle) * velocity - 50; 
-                    
+                    const ty = Math.sin(angle) * velocity - 50;
+                   
                     confetti.animate([
                         { transform: 'translate(0,0) scale(1)', opacity: 1 },
                         { transform: `translate(${tx}px, ${ty}px) scale(0)`, opacity: 0 }
@@ -511,24 +474,22 @@
                         easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
                         fill: 'forwards'
                     });
-                    
+                   
                     document.getElementById('page3').appendChild(confetti);
                     setTimeout(() => confetti.remove(), 2000);
                 }, i * 20);
             }
         }
-
         // ====================== PHẦN LƯU ĐÃ ĐƯỢC SỬA LỖI ======================
         function saveCertificate() {
             const cert = document.getElementById('certificate');
             const btn = document.getElementById('btn-save');
             const flash = document.getElementById('flash-overlay');
             const page3 = document.getElementById('page3');
-            
+           
             // Reset góc nghiêng trước khi chụp
             cert.style.transform = `rotateY(0deg) rotateX(0deg)`;
             cert.style.transition = 'none';
-
             // Hiệu ứng flash
             flash.style.transition = 'none';
             flash.style.opacity = '0.8';
@@ -536,43 +497,42 @@
                 flash.style.transition = 'opacity 0.8s ease-out';
                 flash.style.opacity = '0';
             }, 50);
-
             btn.innerText = "ĐANG TẠO DI SẢN...";
             btn.style.opacity = '0.7';
-
             // Cuộn trang về đầu (rất quan trọng trên mobile)
             page3.scrollTop = 0;
-
             setTimeout(() => {
-                html2canvas(cert, { 
-                    scale: window.devicePixelRatio || 2,           // Giữ chất lượng cao trên màn hình retina
+                const clone = cert.cloneNode(true);
+                clone.style.position = 'absolute';
+                clone.style.left = '-10000px';
+                clone.style.top = '0';
+                clone.style.transform = 'none';
+                document.body.appendChild(clone);
+                html2canvas(clone, {
+                    scale: window.devicePixelRatio || 2, // Giữ chất lượng cao trên màn hình retina
                     backgroundColor: '#fdf5e6',
                     useCORS: true,
                     allowTaint: true,
-                    scrollX: 0,                                    // ← Fix lỗi cắt trên mobile
-                    scrollY: 0,                                    // ← Fix lỗi cắt trên mobile
                     logging: false
-                    // KHÔNG dùng y, width, height thủ công nữa → html2canvas tự lấy full element
                 }).then(canvas => {
                     const link = document.createElement('a');
                     link.download = 'Dieu-Tuyet-Voi-Nhat.png';
                     link.href = canvas.toDataURL('image/png');
                     link.click();
-
                     btn.innerText = "📸 LƯU LẠI KỶ NIỆM NÀY";
                     btn.style.opacity = '1';
                     cert.style.transition = 'transform 0.1s ease-out';
+                    document.body.removeChild(clone);
                 });
             }, 300);
         }
         // =====================================================================
-
         let lastHeartTime = 0;
         function drawHeart(e) {
             const now = Date.now();
-            const delay = e.touches ? 100 : 50; 
+            const delay = e.touches ? 100 : 50;
             if (now - lastHeartTime < delay) return;
-            
+           
             lastHeartTime = now;
             const clientX = e.touches ? e.touches[0].clientX : e.clientX;
             const clientY = e.touches ? e.touches[0].clientY : e.clientY;
@@ -585,7 +545,6 @@
         }
         document.addEventListener('mousemove', drawHeart);
         document.addEventListener('touchmove', drawHeart, {passive: true});
-
         window.addEventListener('orientationchange', () => {
             document.body.style.height = window.innerHeight + 'px';
         });
