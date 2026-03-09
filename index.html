@@ -351,7 +351,6 @@
             document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
             const targetPage = document.getElementById('page' + pageNum);
             targetPage.classList.add('active');
-            
             targetPage.scrollTop = 0; 
             
             if (pageNum === 3) {
@@ -519,14 +518,18 @@
             }
         }
 
+        // ====================== PHẦN LƯU ĐÃ ĐƯỢC SỬA LỖI ======================
         function saveCertificate() {
             const cert = document.getElementById('certificate');
             const btn = document.getElementById('btn-save');
             const flash = document.getElementById('flash-overlay');
+            const page3 = document.getElementById('page3');
             
+            // Reset góc nghiêng trước khi chụp
             cert.style.transform = `rotateY(0deg) rotateX(0deg)`;
             cert.style.transition = 'none';
 
+            // Hiệu ứng flash
             flash.style.transition = 'none';
             flash.style.opacity = '0.8';
             setTimeout(() => {
@@ -537,15 +540,19 @@
             btn.innerText = "ĐANG TẠO DI SẢN...";
             btn.style.opacity = '0.7';
 
+            // Cuộn trang về đầu (rất quan trọng trên mobile)
+            page3.scrollTop = 0;
+
             setTimeout(() => {
                 html2canvas(cert, { 
-                    scale: window.devicePixelRatio || 2,
-                    backgroundColor: '#fdf5e6', 
+                    scale: window.devicePixelRatio || 2,           // Giữ chất lượng cao trên màn hình retina
+                    backgroundColor: '#fdf5e6',
                     useCORS: true,
                     allowTaint: true,
-                    y: cert.getBoundingClientRect().top + window.scrollY,
-                    height: cert.offsetHeight,
-                    width: cert.offsetWidth
+                    scrollX: 0,                                    // ← Fix lỗi cắt trên mobile
+                    scrollY: 0,                                    // ← Fix lỗi cắt trên mobile
+                    logging: false
+                    // KHÔNG dùng y, width, height thủ công nữa → html2canvas tự lấy full element
                 }).then(canvas => {
                     const link = document.createElement('a');
                     link.download = 'Dieu-Tuyet-Voi-Nhat.png';
@@ -558,6 +565,7 @@
                 });
             }, 300);
         }
+        // =====================================================================
 
         let lastHeartTime = 0;
         function drawHeart(e) {
