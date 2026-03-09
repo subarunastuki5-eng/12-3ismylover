@@ -23,9 +23,9 @@
             background: radial-gradient(circle at center, var(--bg-light) 0%, var(--bg-dark) 100%);
             font-family: 'Quicksand', sans-serif;
             color: var(--vintage-text);
-            overscroll-behavior-y: none; /* Ngăn pull-to-refresh trên mobile */
-            -webkit-overflow-scrolling: touch; /* Mượt mà cuộn trên iOS */
-            touch-action: manipulation; /* Tối ưu touch events */
+            overscroll-behavior-y: none;
+            -webkit-overflow-scrolling: touch;
+            touch-action: manipulation;
         }
 
         #flash-overlay {
@@ -55,13 +55,11 @@
             z-index: 10;
             overflow-y: auto; 
             overflow-x: hidden;
-            -webkit-overflow-scrolling: touch; /* Cuộn mượt trên iOS */
+            -webkit-overflow-scrolling: touch;
         }
         .page.active { opacity: 1; visibility: visible; z-index: 20; }
         
-        /* Căn giữa dọc cho trang 1 và 2 */
         #page1, #page2 { justify-content: center; overflow: hidden; }
-        /* Trang 3 dài nên đẩy lên trên cùng và cho padding để cuộn */
         #page3 { justify-content: flex-start; padding: 40px 0 100px 0; perspective: 1000px; }
 
         /* TRANG 1 */
@@ -139,7 +137,7 @@
             border: 8px solid var(--vintage-border);
             transform-style: preserve-3d;
             transition: transform 0.1s ease-out;
-            margin: auto; /* Giữ căn giữa trên Desktop */
+            margin: auto;
         }
         .certificate-wrapper::before {
             content: ''; position: absolute;
@@ -258,26 +256,22 @@
             .cert-title { font-size: 1.6rem; letter-spacing: 1px; }
             .cert-subtitle { font-size: 0.7rem; margin-bottom: 15px; letter-spacing: 2px; }
             
-            /* Thu nhỏ khung ảnh cho vừa màn hình */
             .image-upload-container { width: 140px; height: 180px; margin-bottom: 15px; }
             #upload-text { font-size: 0.7rem !important; }
 
             .quote-footer { font-size: 0.95rem; margin: 15px 0; }
             
-            /* Dịch chuyển con dấu để không đè lên chữ */
             .vintage-stamp { width: 65px; height: 65px; font-size: 0.55rem; bottom: 15px; left: 15px; }
             
             .signature { font-size: 1.8rem; }
             
             .btn-save { padding: 12px 25px; font-size: 0.85rem; margin-top: 20px; width: 90%; text-align: center; }
             
-            /* Giảm số lượng hiệu ứng để tránh lag trên thiết bị yếu */
             @keyframes fall {
-                animation-duration: 6s; /* Chậm hơn để giảm tải CPU */
+                animation-duration: 6s;
             }
         }
 
-        /* Thêm media query cho landscape mode trên mobile để tránh nội dung bị cắt */
         @media (orientation: landscape) and (max-height: 480px) {
             .page { height: auto; min-height: 100vh; }
             #page3 { padding: 20px 0 60px 0; }
@@ -358,7 +352,6 @@
             const targetPage = document.getElementById('page' + pageNum);
             targetPage.classList.add('active');
             
-            // Cuộn lên top khi sang trang mới
             targetPage.scrollTop = 0; 
             
             if (pageNum === 3) {
@@ -386,29 +379,28 @@
                 setTimeout(() => {
                     const continueText = document.getElementById('p2-continue');
                     continueText.classList.add('show');
-                    // Gắn sự kiện click vào cả nền trang 2 để dễ bấm trên điện thoại
                     document.getElementById('page2').onclick = () => goToPage(3);
                 }, 8000);
             }, 800);
         }
 
         const literaryWishes = [
-            "Em là chương đẹp nhất trong cuốn tiểu thuyết đời anh.",
-            "Linh hồn em là cánh đồng hoa nở rộ giữa nhân gian.",
-            "Ánh mắt của em tựa như ánh nắng đầu ngày, dịu dàng mà rực rỡ.",
-            "Em đẹp một cách rất riêng, vừa trong trẻo vừa sâu sắc.",
-            "Vẻ đẹp của em không chỉ khiến người ta ngắm nhìn mà còn khiến người ta nhớ mãi.",
-            "Nét đẹp của em như một bản tình ca dịu êm giữa cuộc sống vội vã.",
-            "Em không cần gắng gượng, chính sự tự nhiên ấy mới là điều cuốn hút nhất.",
-            "Đứng trước em, ngay cả thời gian cũng như khựng lại một nhịp.",
-            "Vẻ đẹp của em giống như ánh trăng đêm rằm – thanh thoát, trọn vẹn và dịu dàng.",
-            "Không phải ai cũng có thần thái khiến mọi không gian như bừng sáng khi bước vào, nhưng em thì có.",
-            "Sự tinh tế trong từng cử chỉ của em khiến người đối diện không thể rời mắt.",
-            "Nét đẹp của em, càng ngắm càng say, càng hiểu càng yêu.",
-            "Nhan sắc nàng là bản giao hưởng không lời, ngân vang giữa thinh lặng.",
-            "Có những vẻ đẹp không cần ngôn từ, chỉ cần một ánh mắt để lưu danh.",
-            "Nếu cuộc đời là một bức họa, em chính là nét vẽ tài hoa nhất.",
-            "Trong điển tích tình yêu, tên em chính là chương rực rỡ nhất."
+            "Em là chương đẹp nhất đời anh.",
+            "Linh hồn em như cánh đồng hoa rực rỡ.",
+            "Ánh mắt em dịu dàng tựa nắng mai.",
+            "Em đẹp theo cách riêng, trong trẻo sâu sắc.",
+            "Vẻ đẹp em lưu luyến mãi trong tim.",
+            "Nét đẹp em là bản tình ca êm đềm.",
+            "Sự tự nhiên của em cuốn hút nhất.",
+            "Em khiến thời gian ngừng trôi một nhịp.",
+            "Em đẹp như trăng rằm thanh thoát.",
+            "Thần thái em làm mọi nơi sáng bừng.",
+            "Cử chỉ tinh tế khiến anh không rời mắt.",
+            "Càng ngắm em càng say đắm hơn.",
+            "Nhan sắc em ngân vang như giao hưởng.",
+            "Vẻ đẹp em chỉ cần một ánh mắt.",
+            "Em là nét vẽ tài hoa nhất cuộc đời.",
+            "Tên em sáng ngời trong chuyện tình yêu."
         ];
 
         function startLiteraryWishes() {
@@ -418,7 +410,6 @@
                 wishEl.className = 'digital-wish';
                 const text = literaryWishes[Math.floor(Math.random() * literaryWishes.length)];
                 
-                // Tránh chữ chạy ra khỏi màn hình trên mobile
                 const isMobile = window.innerWidth <= 480;
                 wishEl.style.left = isMobile ? '5%' : (Math.random() * 40 + 5 + '%');
                 wishEl.style.top = Math.random() * 60 + 15 + '%';
@@ -443,7 +434,7 @@
 
         function createPetals() {
             const isMobile = window.innerWidth <= 480;
-            const intervalTime = isMobile ? 500 : 300; // Giảm tần suất petal trên mobile để tránh lag
+            const intervalTime = isMobile ? 500 : 300;
             setInterval(() => {
                 const petal = document.createElement('div');
                 petal.classList.add('petal');
@@ -457,13 +448,11 @@
             }, intervalTime);
         }
 
-        // Tối ưu 3D Tilt: Giảm độ nhạy trên thiết bị cảm ứng để tránh giật lag
         function initTiltEffect() {
             const card = document.getElementById('certificate');
             const page3 = document.getElementById('page3');
 
             const handleMove = (x, y, isTouch = false) => {
-                // Chia cho số lớn hơn trên mobile để giảm độ nghiêng
                 const divider = isTouch ? 60 : 25; 
                 const xAxis = (window.innerWidth / 2 - x) / divider;
                 const yAxis = (window.innerHeight / 2 - y) / divider;
@@ -472,7 +461,7 @@
 
             page3.addEventListener('mousemove', (e) => handleMove(e.pageX, e.pageY));
             page3.addEventListener('touchmove', (e) => {
-                e.preventDefault(); // Ngăn cuộn mặc định khi tilt trên mobile
+                e.preventDefault();
                 handleMove(e.touches[0].clientX, e.touches[0].clientY, true);
             }, {passive: false});
             page3.addEventListener('mouseleave', () => card.style.transform = `rotateY(0deg) rotateX(0deg)`);
@@ -497,7 +486,7 @@
 
         function fireConfetti() {
             const isMobile = window.innerWidth <= 480;
-            const confettiCount = isMobile ? 20 : 40; // Giảm số confetti trên mobile
+            const confettiCount = isMobile ? 20 : 40;
             const colors = ['#ff4d6d', '#ffd1da', '#ffb3c6', '#ff8fab', '#fb6f92'];
             for(let i = 0; i < confettiCount; i++) {
                 setTimeout(() => {
@@ -535,7 +524,6 @@
             const btn = document.getElementById('btn-save');
             const flash = document.getElementById('flash-overlay');
             
-            // Xóa transform trước khi chụp để ảnh không bị lệch góc
             cert.style.transform = `rotateY(0deg) rotateX(0deg)`;
             cert.style.transition = 'none';
 
@@ -551,11 +539,10 @@
 
             setTimeout(() => {
                 html2canvas(cert, { 
-                    scale: window.devicePixelRatio || 2, // Tối ưu cho màn hình retina mobile
+                    scale: window.devicePixelRatio || 2,
                     backgroundColor: '#fdf5e6', 
                     useCORS: true,
                     allowTaint: true,
-                    // Fix lỗi cắt xén trên điện thoại khi user đang cuộn trang
                     y: cert.getBoundingClientRect().top + window.scrollY,
                     height: cert.offsetHeight,
                     width: cert.offsetWidth
@@ -572,11 +559,9 @@
             }, 300);
         }
 
-        // Tối ưu hiệu ứng chuột: Giảm tần suất tạo div khi Touch trên Mobile để hết lag
         let lastHeartTime = 0;
         function drawHeart(e) {
             const now = Date.now();
-            // Nếu là cảm ứng (điện thoại) thì delay 100ms mới vẽ 1 tim, PC là 50ms
             const delay = e.touches ? 100 : 50; 
             if (now - lastHeartTime < delay) return;
             
@@ -593,7 +578,6 @@
         document.addEventListener('mousemove', drawHeart);
         document.addEventListener('touchmove', drawHeart, {passive: true});
 
-        // Xử lý thay đổi orientation trên mobile
         window.addEventListener('orientationchange', () => {
             document.body.style.height = window.innerHeight + 'px';
         });
