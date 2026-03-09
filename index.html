@@ -20,11 +20,12 @@
 
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
-            /* Bỏ overflow hidden ở body để quản lý cuộn ở từng trang */
             background: radial-gradient(circle at center, var(--bg-light) 0%, var(--bg-dark) 100%);
             font-family: 'Quicksand', sans-serif;
             color: var(--vintage-text);
             overscroll-behavior-y: none; /* Ngăn pull-to-refresh trên mobile */
+            -webkit-overflow-scrolling: touch; /* Mượt mà cuộn trên iOS */
+            touch-action: manipulation; /* Tối ưu touch events */
         }
 
         #flash-overlay {
@@ -52,9 +53,9 @@
             display: flex; flex-direction: column; align-items: center;
             opacity: 0; visibility: hidden; transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 10;
-            /* TỐI ƯU MOBILE: Cho phép cuộn trong từng trang nếu nội dung dài */
             overflow-y: auto; 
             overflow-x: hidden;
+            -webkit-overflow-scrolling: touch; /* Cuộn mượt trên iOS */
         }
         .page.active { opacity: 1; visibility: visible; z-index: 20; }
         
@@ -69,7 +70,6 @@
             transform: rotate(-45deg); animation: heartbeat 1.5s infinite ease-in-out;
             cursor: pointer; box-shadow: 0 0 60px rgba(201, 24, 74, 0.5);
             transition: transform 0.3s;
-            /* Fix chạm mobile */
             -webkit-tap-highlight-color: transparent; 
         }
         .big-heart::before, .big-heart::after {
@@ -270,12 +270,25 @@
             .signature { font-size: 1.8rem; }
             
             .btn-save { padding: 12px 25px; font-size: 0.85rem; margin-top: 20px; width: 90%; text-align: center; }
+            
+            /* Giảm số lượng hiệu ứng để tránh lag trên thiết bị yếu */
+            @keyframes fall {
+                animation-duration: 6s; /* Chậm hơn để giảm tải CPU */
+            }
+        }
+
+        /* Thêm media query cho landscape mode trên mobile để tránh nội dung bị cắt */
+        @media (orientation: landscape) and (max-height: 480px) {
+            .page { height: auto; min-height: 100vh; }
+            #page3 { padding: 20px 0 60px 0; }
+            .certificate-wrapper { max-width: 80%; padding: 20px; }
+            .btn-save { margin-top: 20px; }
         }
     </style>
 </head>
 <body>
 
-    <audio id="bgm" loop>
+    <audio id="bgm" loop preload="auto">
         <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3" type="audio/mpeg">
     </audio>
 
@@ -429,6 +442,8 @@
         }
 
         function createPetals() {
+            const isMobile = window.innerWidth <= 480;
+            const intervalTime = isMobile ? 500 : 300; // Giảm tần suất petal trên mobile để tránh lag
             setInterval(() => {
                 const petal = document.createElement('div');
                 petal.classList.add('petal');
@@ -439,7 +454,7 @@
                 petal.style.animationDuration = Math.random() * 3 + 4 + 's';
                 document.body.appendChild(petal);
                 setTimeout(() => petal.remove(), 7000);
-            }, 300);
+            }, intervalTime);
         }
 
         // Tối ưu 3D Tilt: Giảm độ nhạy trên thiết bị cảm ứng để tránh giật lag
@@ -456,7 +471,10 @@
             };
 
             page3.addEventListener('mousemove', (e) => handleMove(e.pageX, e.pageY));
-            page3.addEventListener('touchmove', (e) => handleMove(e.touches[0].clientX, e.touches[0].clientY, true), {passive: true});
+            page3.addEventListener('touchmove', (e) => {
+                e.preventDefault(); // Ngăn cuộn mặc định khi tilt trên mobile
+                handleMove(e.touches[0].clientX, e.touches[0].clientY, true);
+            }, {passive: false});
             page3.addEventListener('mouseleave', () => card.style.transform = `rotateY(0deg) rotateX(0deg)`);
             page3.addEventListener('touchend', () => card.style.transform = `rotateY(0deg) rotateX(0deg)`);
         }
@@ -478,8 +496,10 @@
         }
 
         function fireConfetti() {
+            const isMobile = window.innerWidth <= 480;
+            const confettiCount = isMobile ? 20 : 40; // Giảm số confetti trên mobile
             const colors = ['#ff4d6d', '#ffd1da', '#ffb3c6', '#ff8fab', '#fb6f92'];
-            for(let i = 0; i < 40; i++) {
+            for(let i = 0; i < confettiCount; i++) {
                 setTimeout(() => {
                     const confetti = document.createElement('div');
                     confetti.classList.add('confetti');
@@ -531,13 +551,14 @@
 
             setTimeout(() => {
                 html2canvas(cert, { 
-                    scale: 3, 
+                    scale: window.devicePixelRatio || 2, // Tối ưu cho màn hình retina mobile
                     backgroundColor: '#fdf5e6', 
                     useCORS: true,
                     allowTaint: true,
                     // Fix lỗi cắt xén trên điện thoại khi user đang cuộn trang
-                    scrollY: -window.scrollY,
-                    windowY: window.scrollY
+                    y: cert.getBoundingClientRect().top + window.scrollY,
+                    height: cert.offsetHeight,
+                    width: cert.offsetWidth
                 }).then(canvas => {
                     const link = document.createElement('a');
                     link.download = 'Dieu-Tuyet-Voi-Nhat.png';
@@ -571,6 +592,11 @@
         }
         document.addEventListener('mousemove', drawHeart);
         document.addEventListener('touchmove', drawHeart, {passive: true});
+
+        // Xử lý thay đổi orientation trên mobile
+        window.addEventListener('orientationchange', () => {
+            document.body.style.height = window.innerHeight + 'px';
+        });
     </script>
 </body>
 </html>
